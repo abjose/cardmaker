@@ -85,7 +85,6 @@ def build_card(title, pwr, hp, ap, desc):
     ctx.stroke()  
     
     # draw lines separating the boxes
-
     ctx.move_to(*scale(.75,.5+.5/3))
     ctx.line_to(*scale(1,.5+.5/3))
     ctx.stroke()    
@@ -141,12 +140,17 @@ def build_card(title, pwr, hp, ap, desc):
     font = pango.FontDescription(fontname + " 10")
     layout.set_font_description(font)
     w = .76*WIDTH
-    x,y = scale(0.0025, .5)
-    write(ctx, pangocairo_ctx, layout, x,y, w, desc, pango.ALIGN_LEFT)
+    #x,y = scale(0.0025, .5)
+    x,y = scale(0.0025, .75)
+    write(ctx, pangocairo_ctx, layout, x,y, w, desc, pango.ALIGN_LEFT, True)
     
     with open("cairo_text.png", "wb") as image_file:
         surf.write_to_png(image_file)
 
-
+cannon_text = """Cannon can have subchains.
+Cannon can only make ranged attacks with its subchains.
+Subchains used in Cannon's ranged attacks take all damage they deal.
+(Give POW bonus for ranged?)
+(Should allow it to 'summon' ammo? So if you don't want to launch anything can get a cannon ball or something to fire)"""
 if __name__=="__main__":
-    build_card('chainsaw', 2,15,8, "stuff")
+    build_card('cannon', 2,15,8, cannon_text)
