@@ -10,7 +10,6 @@ TODO
   (sure this doesn't exist'?)
 - figure out how to add images?
 - figure out how to add symbols? (like eye for sentience, etc.)
-- pretty great if can arrage cards on a page...
 - make some of the bars into variables - like the left side of the colored boxes
   becomes STAT_BOX_EXTENT or something
 - ALSO CONSIDER HORIZONTAL CARDS
@@ -20,7 +19,8 @@ TODO
   AND WIDE TEXT ON BOTTOM HALF
   Problem might be...cards less denseley packed, might waste space because
   description isn't long enough to take up whole line?'
-- make fonts and line thicknesses scale with card
+- make fonts and line thicknesses scale with card?
+  naww, just resize the card if you need to...it's a vector graphic!
 """
 
 def p2u(x):
@@ -186,7 +186,7 @@ def build_page(cards_w, cards_h, cards, filename="test_page"):
         # draw card
         ctx.set_source_surface(cs, cx, cy)
         ctx.paint()
-        # update update drawing position
+        # update drawing position
         cx += cw + BORDER  
         if cx >= WIDTH:
             cx = BORDER
