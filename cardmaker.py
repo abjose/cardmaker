@@ -5,6 +5,7 @@ import pangocairo
 
 """
 TODO
+- need to make read in CSV files now
 - add something that allows you to make font a certain width
   (i.e. as large as possible s.t. it fits in given width)
   (sure this doesn't exist'?)
