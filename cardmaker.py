@@ -151,11 +151,17 @@ def build_card(title, pwr, hp, ap, desc, save=False):
 
     return surf
 
-def build_pages(cards):
+def build_pages(cards_w, cards_h, cards):
     # passes the proper amount of cards to build_page, saves each page
+    num_cards = cards_w * cards_h
+    i = 0
+    while cards:
+        build_page(cards_w, cards_h, cards, "page"+str(i))
+        cards = cards[num_cards:]
+        i += 1
     pass
     
-def build_page(cards_w, cards_h, cards):
+def build_page(cards_w, cards_h, cards, filename="test_page"):
     # cards_h and cards_v are number of cards wide and high
     # cards is a list of (title, pwr, hp, ap, desc) tuples
     # border to surround each card, in pixels
@@ -187,7 +193,7 @@ def build_page(cards_w, cards_h, cards):
             cy += ch + BORDER
 
     # save
-    surf.write_to_png("test_page.png")
+    surf.write_to_png(filename+".png")
 
     
 cannon_text = """Cannon can have subchains.
@@ -198,4 +204,5 @@ Subchains used in Cannon's ranged attacks take all damage they deal.
 if __name__=="__main__":
     card = ('cannon', 2,15,8, cannon_text)
     #build_card(*card)
-    build_page(3,5, [card for _ in range(10)])
+    #build_page(3,5, [card for _ in range(10)])
+    build_pages(2,2, [card for _ in range(10)])
