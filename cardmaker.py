@@ -20,6 +20,7 @@ TODO
   AND WIDE TEXT ON BOTTOM HALF
   Problem might be...cards less denseley packed, might waste space because
   description isn't long enough to take up whole line?'
+- make fonts and line thicknesses scale with card
 """
 
 def p2u(x):
@@ -43,7 +44,7 @@ def write(ctx, pctx, layout, x, y, width, text, alignment, center_vert=None):
     pctx.update_layout(layout)
     pctx.show_layout(layout)
 
-def build_card(title, pwr, hp, ap, desc):
+def build_card(title, pwr, hp, ap, desc, save=False):
     WIDTH, HEIGHT = 350, 500
     scale = lambda x, y: (x*WIDTH, y*HEIGHT)
     
@@ -143,14 +144,58 @@ def build_card(title, pwr, hp, ap, desc):
     #x,y = scale(0.0025, .5)
     x,y = scale(0.0025, .75)
     write(ctx, pangocairo_ctx, layout, x,y, w, desc, pango.ALIGN_LEFT, True)
-    
-    with open("cairo_text.png", "wb") as image_file:
-        surf.write_to_png(image_file)
 
+    # save to PNG if want to
+    if save:
+        surf.write_to_png("test_card.png")
+
+    return surf
+
+def build_pages(cards):
+    # passes the proper amount of cards to build_page, saves each page
+    pass
+    
+def build_page(cards_w, cards_h, cards):
+    # cards_h and cards_v are number of cards wide and high
+    # cards is a list of (title, pwr, hp, ap, desc) tuples
+    # border to surround each card, in pixels
+    BORDER = 5
+    # convert cards to a list of surfaces
+    card_surfs = [build_card(*args) for args in cards]
+    # TODO: assume they all have the same length - should check!
+    cw, ch = card_surfs[0].get_width(), card_surfs[0].get_height()
+    WIDTH  = cards_w*cw + BORDER*(cards_w+1)
+    HEIGHT = cards_h*ch + BORDER*(cards_h+1)
+
+    # make surface
+    surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+    ctx = cairo.Context(surf)
+    ctx.rectangle(0,0, WIDTH, HEIGHT)
+    ctx.set_source_rgb(0, 1, 0)
+    ctx.fill()
+    
+    # fill with cards
+    cx, cy = BORDER, BORDER #0, 0
+    for cs in card_surfs:
+        # draw card
+        ctx.set_source_surface(cs, cx, cy)
+        ctx.paint()
+        # update update drawing position
+        cx += cw + BORDER  
+        if cx >= WIDTH:
+            cx = BORDER
+            cy += ch + BORDER
+
+    # save
+    surf.write_to_png("test_page.png")
+
+    
 cannon_text = """Cannon can have subchains.
 Cannon can only make ranged attacks with its subchains.
 Subchains used in Cannon's ranged attacks take all damage they deal.
 (Give POW bonus for ranged?)
 (Should allow it to 'summon' ammo? So if you don't want to launch anything can get a cannon ball or something to fire)"""
 if __name__=="__main__":
-    build_card('cannon', 2,15,8, cannon_text)
+    card = ('cannon', 2,15,8, cannon_text)
+    #build_card(*card)
+    build_page(3,5, [card for _ in range(10)])
